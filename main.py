@@ -6,7 +6,7 @@ from border import Border
 import time
 
 screen = Screen()
-screen.setup(width=603, height=603)
+screen.setup(width=700, height=700)
 screen.title("Snake Game")
 screen.bgcolor("black")
 screen.tracer(0)

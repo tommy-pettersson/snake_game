@@ -4,18 +4,26 @@ import random
 
 class Food(Turtle):
 
-    def __init__(self):
+    def __init__(self, segments):
         super().__init__()
         self.shape("circle")
         self.color("red")
         self.shapesize(stretch_wid=0.5, stretch_len=0.5)
         self.penup()
-        self.new_position = ()
-        self.new_random_position()
-        self.refresh()
+        self.refresh(segments)
 
-    def refresh(self):
-        self.goto(self.new_position)
+    def refresh(self, segments):
+        new_location = self.random_location()
+        while not self.location_ok(new_location, segments):
+            new_location = self.random_location()
+        self.goto(new_location)
 
-    def new_random_position(self):
-        self.new_position = (random.randint(-280, 280), random.randint(-280, 280))
+    def random_location(self):
+        return (random.randint(-280, 280), random.randint(-280, 280))
+
+    def location_ok(self, location, segments):
+        clear_snake = True
+        for segment in segments:
+            if segment.distance(location) < 40:
+                clear_snake = False
+        return clear_snake

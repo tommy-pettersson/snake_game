@@ -2,24 +2,19 @@ from turtle import Screen
 from snake import Snake
 from food import Food
 from scoreboard import Scoreboard
+from border import Border
 import time
 
-def food_location_ok(location):
-    location_ok = True
-    for segment in snake.segments:
-        if segment.distance(location) < 40:
-            location_ok = False
-    return location_ok
-
 screen = Screen()
-screen.setup(width=600, height=600)
+screen.setup(width=603, height=603)
 screen.title("Snake Game")
 screen.bgcolor("black")
 screen.tracer(0)
 
+border = Border()
 snake = Snake()
-food = Food()
 scoreboard = Scoreboard()
+food = Food(snake.segments)
 
 screen.listen()
 screen.onkey(snake.up, "Up")
@@ -47,20 +42,14 @@ while game_is_on:
          # Detect collision with food.
         if snake.head.distance(food) < 20:
             scoreboard.increase_score()
-
-            food.new_random_position()
-            while not food_location_ok(food.new_position):
-                print("invalid location, trying again..")
-                food.new_random_position()
-
-            food.refresh()
+            food.refresh(snake.segments)
             snake.extend()
         
     else:
-        if snake.explode_count >= 20:
-            game_is_on = False
-            scoreboard.game_over()
-        else:
+        if snake.explode_count < 20:
             snake.explode()
+        else:
+            scoreboard.game_over()
+            game_is_on = False
 
 screen.exitonclick()
